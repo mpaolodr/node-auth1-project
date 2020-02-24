@@ -8,6 +8,9 @@ const KnexSessionsStore = require("connect-session-knex")(sessions);
 const knex = require("../data/db-config.js");
 
 const authRouter = require("../routers/auth/authRouter.js");
+const userRouter = require("../routers/users/userRouter.js");
+
+const restricted = require("./middlewares/restricted-middleware.js");
 
 const server = express();
 
@@ -36,6 +39,7 @@ server.use(cors());
 server.use(sessions(sessionConfig));
 
 server.use("/api/auth", authRouter);
+server.use("/api/users", restricted, userRouter);
 
 server.get("/", (req, res) => {
   res.status(200).json({ api: "is live!" });
